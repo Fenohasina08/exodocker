@@ -1,0 +1,26 @@
+package com.example.demo.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UpdateTodoRequest {
+
+  @NotBlank(message = "Id is required")
+  private String id;
+
+  @NotBlank(message = "Title is required")
+  private String title;
+
+  private String description;
+
+  private Boolean isCompleted;
+}
