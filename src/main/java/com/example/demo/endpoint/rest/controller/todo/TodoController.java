@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.lang.Exception;
+import io.sentry.Sentry;
 
 @RestController
 @RequestMapping("/todos")
@@ -39,7 +41,11 @@ public class TodoController {
 
     List<TodoResponse> responses =
         todos.stream().map(todoMapper::toResponse).collect(Collectors.toList());
-
+    try {
+      throw new Exception("This is a test.");
+    } catch (Exception e) {
+      Sentry.captureException(e);
+    }
     return ResponseEntity.ok(responses);
   }
 

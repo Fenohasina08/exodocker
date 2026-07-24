@@ -8,6 +8,8 @@ plugins {
 
     id 'jacoco'
 
+    id "io.sentry.jvm.gradle" version "6.16.0"
+
 }
 
 import java.util.Properties
@@ -34,7 +36,13 @@ java {
 
 }
 
+sentry {
+    includeSourceContext = true
 
+    org = "poja-wb"
+    projectName = "java-spring-boot"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
 
 repositories {
 
