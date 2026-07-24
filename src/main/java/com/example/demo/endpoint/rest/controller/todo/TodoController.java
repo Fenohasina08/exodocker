@@ -6,14 +6,13 @@ import com.example.demo.dto.UpdateTodoRequest;
 import com.example.demo.mapper.TodoMapper;
 import com.example.demo.model.Todo;
 import com.example.demo.service.TodoService;
+import io.sentry.Sentry;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.lang.Exception;
-import io.sentry.Sentry;
 
 @RestController
 @RequestMapping("/todos")

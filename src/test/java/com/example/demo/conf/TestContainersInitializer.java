@@ -8,27 +8,26 @@ import org.testcontainers.utility.DockerImageName;
 
 public interface TestContainersInitializer {
 
-    PostgreSQLContainer<?> POSTGRES =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
-                    .withDatabaseName("testdb")
-                    .withUsername("test")
-                    .withPassword("test")
-                    .withReuse(true);
+  PostgreSQLContainer<?> POSTGRES =
+      new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
+          .withDatabaseName("testdb")
+          .withUsername("test")
+          .withPassword("test")
+          .withReuse(true);
 
-    class Initializer
-            implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+  class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-        @Override
-        public void initialize(ConfigurableApplicationContext applicationContext) {
-            POSTGRES.start();
+    @Override
+    public void initialize(ConfigurableApplicationContext applicationContext) {
+      POSTGRES.start();
 
-            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
-                    applicationContext,
-                    "spring.datasource.url=" + POSTGRES.getJdbcUrl(),
-                    "spring.datasource.username=" + POSTGRES.getUsername(),
-                    "spring.datasource.password=" + POSTGRES.getPassword(),
-                    "spring.flyway.enabled=true",
-                    "spring.jpa.hibernate.ddl-auto=validate");
-        }
+      TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
+          applicationContext,
+          "spring.datasource.url=" + POSTGRES.getJdbcUrl(),
+          "spring.datasource.username=" + POSTGRES.getUsername(),
+          "spring.datasource.password=" + POSTGRES.getPassword(),
+          "spring.flyway.enabled=true",
+          "spring.jpa.hibernate.ddl-auto=validate");
     }
+  }
 }
