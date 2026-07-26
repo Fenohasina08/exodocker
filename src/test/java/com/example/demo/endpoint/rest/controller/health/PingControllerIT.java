@@ -10,13 +10,13 @@ import org.springframework.http.HttpStatus;
 
 class PingControllerIT extends FacadeIT {
 
-    @Autowired private TestRestTemplate restTemplate;
+  @Autowired private TestRestTemplate restTemplate;
 
-    @Test
-    void ping_devrait_repondre_pong() {
-        var response = restTemplate.getForEntity("/ping", String.class);
+  @Test
+  void ping_devrait_repondre_pong() {
+    var response = restTemplate.getForEntity("/ping", String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("pong");
-    }
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isEqualTo("pong");
+  }
 }
