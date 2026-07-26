@@ -1,32 +1,3 @@
-
-CREATE TABLE flyway_schema_history
-(
-    installed_rank INTEGER                                   NOT NULL,
-    version        VARCHAR(50),
-    description    VARCHAR(200)                              NOT NULL,
-    type           VARCHAR(20)                               NOT NULL,
-    script         VARCHAR(1000)                             NOT NULL,
-    checksum       INTEGER,
-    installed_by   VARCHAR(100)                              NOT NULL,
-    installed_on   TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW() NOT NULL,
-    execution_time INTEGER                                   NOT NULL,
-    success        BOOLEAN                                   NOT NULL,
-    CONSTRAINT flyway_schema_history_pk PRIMARY KEY (installed_rank)
-);
-
-CREATE TABLE todo
-(
-    id           VARCHAR                     DEFAULT (uuid_generate_v4()) NOT NULL,
-    title        VARCHAR                                                  NOT NULL,
-    description  TEXT,
-    is_completed BOOLEAN                     DEFAULT FALSE,
-    created_at   TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-    updated_at   TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-    CONSTRAINT todo_pkey PRIMARY KEY (id)
-);
-
-CREATE INDEX flyway_schema_history_s_idx ON flyway_schema_history (success);
-
 INSERT INTO todo (
     title,
     description,
@@ -54,6 +25,3 @@ INSERT INTO todo (
       ('Install PostgreSQL', 'Set up PostgreSQL on a new environment.', TRUE, NOW(), NOW()),
       ('Test API endpoints', 'Verify all endpoints using Postman.', FALSE, NOW(), NOW()),
       ('Write documentation', 'Document the REST API endpoints.', FALSE, NOW(), NOW());
-
-
-select * from todo;
