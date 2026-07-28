@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(IllegalArgumentException.class)
   public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException exception) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(Map.of("message", exception.getMessage(), "status", 400, "timestamp", Instant.now()));
+        .body(Map.of("message", exception.getMessage(), "status", 400, "timestamp", Instant.now()));
   }
 
   @ExceptionHandler(Exception.class)
