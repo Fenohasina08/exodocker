@@ -6,7 +6,6 @@ import com.example.demo.dto.UpdateTodoRequest;
 import com.example.demo.mapper.TodoMapper;
 import com.example.demo.model.Todo;
 import com.example.demo.service.TodoService;
-import io.sentry.Sentry;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,12 +39,6 @@ public class TodoController {
 
     List<TodoResponse> responses =
         todos.stream().map(todoMapper::toResponse).collect(Collectors.toList());
-
-    try {
-      throw new Exception("This is a test.");
-    } catch (Exception e) {
-      Sentry.captureException(e);
-    }
 
     return ResponseEntity.ok(responses);
   }
