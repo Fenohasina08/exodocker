@@ -25,7 +25,7 @@ public class TodoController {
 
   @GetMapping
   public ResponseEntity<List<TodoResponse>> getTodos(
-          @RequestParam(name = "onlyCompleted", required = false) Boolean onlyCompleted) {
+      @RequestParam(name = "onlyCompleted", required = false) Boolean onlyCompleted) {
 
     List<Todo> todos;
 
@@ -39,7 +39,7 @@ public class TodoController {
     }
 
     List<TodoResponse> responses =
-            todos.stream().map(todoMapper::toResponse).collect(Collectors.toList());
+        todos.stream().map(todoMapper::toResponse).collect(Collectors.toList());
 
     try {
       throw new Exception("This is a test.");
