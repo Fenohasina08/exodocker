@@ -1,5 +1,6 @@
 package com.example.demo.exception;
 
+import io.sentry.Sentry;
 import java.time.Instant;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(NotFoundException.class)
   public ResponseEntity<?> handleNotFound(NotFoundException exception) {
 
+    Sentry.captureException(exception);
+
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(Map.of("message", exception.getMessage(), "status", 404, "timestamp", Instant.now()));
   }
@@ -21,12 +24,17 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<?> handleValidation(MethodArgumentNotValidException exception) {
 
+    Sentry.captureException(exception);
+
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(Map.of("message", "Validation error", "status", 400, "timestamp", Instant.now()));
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
   public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException exception) {
+
+    Sentry.captureException(exception);
+
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(Map.of("message", exception.getMessage(), "status", 400, "timestamp", Instant.now()));
   }
@@ -34,7 +42,13 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(Exception.class)
   public ResponseEntity<?> handleGeneric(Exception exception) {
 
+    Sentry.captureException(exception);
+
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(Map.of("message", exception.getMessage(), "status", 500, "timestamp", Instant.now()));
+        .body(
+            Map.of(
+                "message", exception.getMessage(),
+                "status", 500,
+                "timestamp", Instant.now()));
   }
 }
