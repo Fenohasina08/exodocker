@@ -5,15 +5,22 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.3'
+
     id 'org.openapi.generator' version '7.7.0'
+
     id 'jacoco'
+
+    
 }
 
 jacoco {
     toolVersion = "0.8.11"
 }
 
+
+
 repositories {
+
     mavenCentral()
 }
 
@@ -29,6 +36,9 @@ configurations {
     }
 }
 
+
+
+
 test {
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     useJUnitPlatform()
@@ -37,7 +47,6 @@ test {
 
 jacocoTestCoverageVerification {
     dependsOn test
-
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
@@ -45,7 +54,6 @@ jacocoTestCoverageVerification {
             ])
         }))
     }
-
     violationRules {
         rule {
             limit {
@@ -54,7 +62,6 @@ jacocoTestCoverageVerification {
             }
         }
     }
-
     finalizedBy jacocoTestReport
 }
 
@@ -63,15 +70,15 @@ jacocoTestReport {
         xml.required = true
         html.required = true
     }
-
     afterEvaluate {
+        // Need to be duplicated like this from jacocoTestCoverageVerification,
+        // else display coverageRate is inconsistent with what was computed during coverage...
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                     "**/gen/**"
             ])
         }))
     }
-
     doLast {
         def coverageReportFile = file("$rootDir/build/reports/jacoco/test/jacocoTestReport.xml")
 
@@ -83,11 +90,9 @@ jacocoTestReport {
             def xml = xmlParser.parse(coverageReportFile)
 
             def lineCounter = xml.'counter'.find { it.@type == 'LINE' }
-
             if (lineCounter != null) {
                 def totalLines = lineCounter.@missed?.toInteger() + lineCounter.@covered?.toInteger() ?: 0
                 def coveredLines = lineCounter.@covered?.toInteger() ?: 0
-
                 if (totalLines > 0) {
                     def coverageRate = coveredLines / totalLines.toDouble() * 100
                     println "Total Line Coverage Rate: ${coverageRate.round(2)}%"
@@ -98,15 +103,13 @@ jacocoTestReport {
                 println "No LINE coverage counter found in the JaCoCo report."
             }
         } else {
-            println "No JaCoCo coverage report found."
+            println "No JaCoCo coverage report found. Make sure you run 'gradle test jacocoTestReport' first."
         }
     }
 }
 
 dependencies {
-
     implementation 'org.springframework.boot:spring-boot-starter-web:3.2.2'
-
     testImplementation 'org.testcontainers:testcontainers:2.0.2'
 
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.3'
@@ -116,7 +119,6 @@ dependencies {
 
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
     implementation 'com.amazonaws:aws-lambda-java-events:3.11.3'
-
     implementation 'software.amazon.awssdk:sqs:2.21.40'
     implementation 'software.amazon.awssdk:eventbridge:2.21.40'
     implementation 'software.amazon.awssdk:s3:2.21.40'
@@ -136,7 +138,6 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
-
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
@@ -147,28 +148,22 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter:2.0.2'
     testImplementation 'org.junit-pioneer:junit-pioneer:2.2.0'
 
-
-    // Sentry - version alignée
-    implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.6.0'
     implementation 'io.sentry:sentry-logback:7.6.0'
+    implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.4.0'
+    
+testImplementation 'org.testcontainers:postgresql'
+implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+implementation 'org.postgresql:postgresql'
+implementation 'org.flywaydb:flyway-core:10.7.2'
+implementation 'org.flywaydb:flyway-database-postgresql:10.7.2'
+implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+testImplementation 'org.springframework.security:spring-security-test'
+implementation 'software.amazon.awssdk:ses:2.25.60'
+implementation 'software.amazon.awssdk:utils:2.25.60'
+implementation 'io.sentry:sentry-spring-boot-starter-jakarta'
 
-
-    testImplementation 'org.testcontainers:postgresql'
-
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.postgresql:postgresql'
-
-    implementation 'org.flywaydb:flyway-core:10.7.2'
-    implementation 'org.flywaydb:flyway-database-postgresql:10.7.2'
-
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
-
-    testImplementation 'org.springframework.security:spring-security-test'
-
-    implementation 'software.amazon.awssdk:ses:2.25.60'
-    implementation 'software.amazon.awssdk:utils:2.25.60'
-
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+    
+implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 }
