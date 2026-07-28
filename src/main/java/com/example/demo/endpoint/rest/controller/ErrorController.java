@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ErrorController {
 
-    @GetMapping("/exception")
-    public void getError() {
-        throw new RuntimeException("This is an error");
-    }
+  @GetMapping("/exception")
+  public void getError() {
+    throw new RuntimeException("This is an error");
+  }
 }
