@@ -20,7 +20,7 @@ jobs:
 
     env:
       AWS_REGION: eu-west-3
-      
+
 
     steps:
       - uses: actions/checkout@v4.1.6
@@ -34,7 +34,15 @@ jobs:
       - run: |
           ./gradlew test
 
-      
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: build/reports/tests/test/
+          retention-days: 7
+
+
 
   format:
     runs-on: ubuntu-latest
