@@ -148,12 +148,23 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter:2.0.2'
     testImplementation 'org.junit-pioneer:junit-pioneer:2.2.0'
 
-implementation 'io.sentry:sentry-spring-boot-jakarta:7.10.0'
+    implementation 'io.sentry:sentry-logback:7.6.0'
+    implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.4.0'
+    
 testImplementation 'org.testcontainers:postgresql'
 implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 implementation 'org.postgresql:postgresql'
 implementation 'org.flywaydb:flyway-core:10.7.2'
 implementation 'org.flywaydb:flyway-database-postgresql:10.7.2'
+implementation 'org.springframework.boot:spring-boot-starter-security'
+implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+testImplementation 'org.springframework.security:spring-security-test'
+implementation 'software.amazon.awssdk:ses:2.25.60'
+implementation 'software.amazon.awssdk:utils:2.25.60'
 
+
+    
 implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 }
