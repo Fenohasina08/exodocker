@@ -16,6 +16,6 @@ public class ErrorController {
   @GetMapping("/log-error")
   public String logError() {
     log.error("This is an error");
-    return "OK";
+    return "SENTRY TEST VERSION 2";
   }
 }
