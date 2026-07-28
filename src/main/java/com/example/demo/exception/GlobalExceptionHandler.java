@@ -1,6 +1,8 @@
 package com.example.demo.exception;
 
 import io.sentry.Sentry;
+import io.sentry.exception.ExceptionMechanismException;
+import io.sentry.protocol.Mechanism;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -22,7 +24,6 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(NotFoundException.class)
   public ResponseEntity<?> handleNotFound(NotFoundException exception, HttpServletRequest request) {
-    // 404 = comportement attendu, pas une anomalie -> pas de Sentry, juste un log léger
     log.info("Resource not found: {} ({})", exception.getMessage(), request.getRequestURI());
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(baseBody(exception.getMessage(), 404));
   }
@@ -51,14 +52,22 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<?> handleGeneric(Exception exception, HttpServletRequest request) {
-    // Ici seulement : vraie anomalie -> Sentry + log ERROR + id de suivi
     String errorId = UUID.randomUUID().toString();
+
     Sentry.configureScope(
         scope -> {
           scope.setTag("errorId", errorId);
           scope.setTag("path", request.getRequestURI());
         });
-    Sentry.captureException(exception);
+
+    // Marque explicitement l'exception comme "handled" pour Sentry,
+    // puisqu'elle est bien interceptée et traitée ici (réponse propre renvoyée au client).
+    Mechanism mechanism = new Mechanism();
+    mechanism.setType("GlobalExceptionHandler");
+    mechanism.setHandled(true);
+    Throwable mechanismException =
+        new ExceptionMechanismException(mechanism, exception, Thread.currentThread());
+    Sentry.captureException(mechanismException);
 
     log.error("Unhandled exception [{}] on {}", errorId, request.getRequestURI(), exception);
 
